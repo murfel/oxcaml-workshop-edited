@@ -16,46 +16,19 @@ type t = (string, account) Portable_lockfree_htbl.t
 
 let create () : t = Portable_lockfree_htbl.create (module Name)
 
-let open_account (t : t) name ~(balance : int) =
-  let account = Capsule.Sync.With_mutex.create (fun () -> ref balance) in
-  match Portable_lockfree_htbl.add t ~key:name ~data:account with
-  | Null -> Ok ()
-  | This _ -> Error ()
+let open_account (t : t) name ~(balance : int) : (unit, unit) Result.t =
+  (* For you to implement *)
+  Error ()
 ;;
 
-let balance (sync : Sync.t @ local) (t : t) name =
-  match Portable_lockfree_htbl.find t name with
-  | Null -> Error ()
-  | This account ->
-    Ok (Capsule.Sync.With_mutex.with_lock sync account ~f:(fun _sync balance -> !balance))
+let balance (sync : Sync.t @ local) (t : t) name : (int, unit) Result.t =
+  (* For you to implement *)
+  Error ()
 ;;
 
-let transfer (sync : Sync.t @ local) (t : t) ~from ~to_ ~amount =
-  match Portable_lockfree_htbl.find t from, Portable_lockfree_htbl.find t to_ with
-  | Null, _ | _, Null -> Error ()
-  | This from_account, This to_account ->
-    if amount <= 0 || String.equal from to_
-    then Error ()
-    else (
-      let from_first = String.( < ) from to_ in
-      let first, second =
-        if from_first then from_account, to_account else to_account, from_account
-      in
-      Capsule.Sync.With_mutex.with_scoped sync first ~f:(fun sync first ->
-        Capsule.Sync.With_mutex.with_scoped sync second ~f:(fun _sync second ->
-          let #(from_balance, to_balance) =
-            if from_first then #(first, second) else #(second, first)
-          in
-          if Capsule.Scoped.get from_balance ~f:(fun balance -> !balance) < amount
-          then Error ()
-          else (
-            Capsule.Scoped.iter from_balance ~f:(fun balance ->
-              balance := !balance - amount);
-            Capsule.Scoped.iter to_balance ~f:(fun balance ->
-              balance := !balance + amount);
-            Ok ()))
-        [@nontail])
-      [@nontail])
+let transfer (sync : Sync.t @ local) (t : t) ~from ~to_ ~amount : (unit, unit) Result.t =
+  (* For you to implement *)
+  Error ()
 ;;
 
 let print_balance (sync : Sync.t @ local) (t : t) name =

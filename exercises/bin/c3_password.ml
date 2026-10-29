@@ -20,18 +20,7 @@ let main () =
         directly. The simplest syntax is [~f:(fun access : int -> ...)].
   *)
   let #(all_data1, key) =
-    let rec go key capsules =
-      match capsules with
-      | [] -> #([], key)
-      | capsule :: capsules ->
-        let #(datum, key) =
-          Capsule.Prim.Key.access key ~f:(fun access : int ->
-            !(Capsule.Data.unwrap ~access capsule))
-        in
-        let #(data, key) = go key capsules in
-        #(datum :: data, key)
-    in
-    go key capsules
+    #([], key)
   in
   (* Exercise: Now, do the same, but use the passwords ([Capsule.Prim.Key.with_password],
      [Capsule.Prim.access], [Capsule.Data.unwrap]).
@@ -53,14 +42,7 @@ let main () =
         [@nontail] annotation at the end of the tail call.
   *)
   let #(all_data2, key) =
-    let #(wrapped, key) =
-      Capsule.Prim.Key.with_password key ~f:(fun password ->
-        List.map capsules ~f:(fun capsule ->
-          Capsule.Prim.access ~password ~f:(fun access ->
-            !(Capsule.Data.unwrap ~access capsule)))
-        |> Modes.Aliased.wrap)
-    in
-    #(Modes.Aliased.unwrap wrapped, key)
+    #([], key)
   in
   let _ = all_data1 in
   let _ = key in

@@ -7,27 +7,19 @@ let counter : int ref Capsule.Sync.With_mutex.t =
   Capsule.Sync.With_mutex.create (fun () -> ref 0)
 ;;
 
-let iterations = 10_000_000
+let writer_iterations = 10_000_000
+let reader_iterations = 5
 
-(* Modify the [writer] and the [reader] functions so that [writer] increments the counter and the [reader] reads it.
-   Use [Sync.blocking] and
+(* Modify the [writer] and the [reader] functions so that [writer] increments the counter and the [reader] reads it and prints to the standard output.
+   Use [Capsule.Sync.With_mutex.with_lock] and [Sync.blocking].
 *)
 
 let writer () =
-  let sync = Sync.blocking in
-  for _ = 1 to iterations do
-    Capsule.Sync.With_mutex.with_lock sync counter ~f:(fun _sync counter -> incr counter)
-  done
+  ()
 ;;
 
 let reader () =
-  let sync = Sync.blocking in
-  for _ = 1 to 5 do
-    let value =
-      Capsule.Sync.With_mutex.with_lock sync counter ~f:(fun _sync counter -> !counter)
-    in
-    printf "reader saw: %d\n%!" value
-  done
+  ()
 ;;
 
 let run (par : Parallel.t) =
