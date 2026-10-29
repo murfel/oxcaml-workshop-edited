@@ -1,0 +1,18 @@
+(lang dune 3.24)
+(name exercises)
+(sections (lib .) (bin ../../bin))
+(files
+ (lib (META dune-package opam))
+ (bin
+  (a0_stock
+   a1_captured
+   a2_applier
+   b0_portability
+   b1_captured_vs_parameters
+   b2_fork_join
+   b3_on_join
+   c0_capsules_move_ownership
+   c1_counter
+   c2_bank
+   c3_password
+   exercises)))
