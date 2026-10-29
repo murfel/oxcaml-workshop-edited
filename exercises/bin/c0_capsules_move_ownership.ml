@@ -12,13 +12,7 @@ let () =
     let #(left, right) =
       Parallel.fork_join2
         par
-        (fun _ ->
-          let #(value, _key) =
-            Capsule.Prim.Key.with_password key ~f:(fun password ->
-              Capsule.Prim.access ~password ~f:(fun access ->
-                !(Capsule.Data.unwrap ~access data)))
-          in
-          value)
+        (fun _ -> 1)
         (fun _ -> 2)
     in
     left + right

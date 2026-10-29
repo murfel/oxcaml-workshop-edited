@@ -10,11 +10,9 @@
    *)
 
 let run (par : Parallel.t) =
-  let r = ref 0 in
-  r := !r + 1;
-  let #(a, b) = Parallel.fork_join2 par (fun _par -> r.contents + 1) (fun _par -> 0) in
-  r := !r + 1;
-  Printf.printf "r: %d, a: %d, b: %d\n" !r a b
+  let _ = ref 0 in
+  let #(_, _) = Parallel.fork_join2 par (fun _ -> ()) (fun _ -> ()) in
+  ()
 ;;
 
 let () = Parallel_scheduler.with_parallel run

@@ -8,7 +8,7 @@
    functions passed into the real fork_join2, and work out the requirements for the custom
    fork_join2 backwards from there.
 *)
-let my_fork_join2 (par : Parallel.t) f g (a @ shareable shared) (b @ shareable shared) =
+let my_fork_join2 (par : Parallel.t) f g a b =
   Parallel.fork_join2 par (fun _par -> f a) (fun _par -> g b)
 ;;
 
@@ -23,26 +23,23 @@ let example1 (par : Parallel.t) =
 ;;
 
 (* Second example usage. *)
-let example2 (par : Parallel.t) =
-  let incr r = r := !r + 42 in
-  let decr r = r := !r - 10 in
-  let #(a', b') =
-    my_fork_join2
-      par
-      (fun a ->
-        let r = ref 0 in
-        a r;
-        !r)
-      (fun b ->
-        let r = ref 0 in
-        b r;
-        !r)
-      incr
-      decr
-  in
-  Printf.printf "a: %d, b: %d\n" a' b'
-;;
+(* Uncomment to see if your modes pass this one, too. *)
+
+(* let example2 (par : Parallel.t) = *)
+(*  let incr r = r := !r + 42 in *)
+(*  let decr r = r := !r - 10 in *)
+(*  let #(a', b') = *)
+(*    my_fork_join2 *)
+(*      par *)
+(*      (fun a -> let r = ref 0 in a r; !r) *)
+(*      (fun b -> let r = ref 0 in b r; !r) *)
+(*      incr *)
+(*      decr *)
+(*  in *)
+(*  Printf.printf "a: %d, b: %d\n" a' b' *)
+(* ;; *)
 
 let () = Parallel_scheduler.with_parallel example1
+
 (* Uncomment to see if your modes pass this one, too. *)
 (* let () = Parallel_scheduler.with_parallel example2 *)

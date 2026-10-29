@@ -9,6 +9,10 @@ let counter : int ref Capsule.Sync.With_mutex.t =
 
 let iterations = 10_000_000
 
+(* Modify the [writer] and the [reader] functions so that [writer] increments the counter and the [reader] reads it.
+   Use [Sync.blocking] and
+*)
+
 let writer () =
   let sync = Sync.blocking in
   for _ = 1 to iterations do

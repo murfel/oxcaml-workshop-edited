@@ -7,9 +7,7 @@
 *)
 
 let () =
-  let r @ uncontended = ref 0 in
-  let (incrementer @ contended) r = r := !r + 1 in
-  let applier (p @ uncontended) = (snd p) (fst p) in
-  applier (r, incrementer);
+  (* You can annotate the mode like let (r @ contended) = ref 0 ... *)
+  let r = ref 0 in
   Printf.printf "%d\n" !r
 ;;
